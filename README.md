@@ -18,6 +18,10 @@ python main.py
 
 Open [http://127.0.0.1:8765](http://127.0.0.1:8765). MAYA binds to loopback only. Stop it with Ctrl+C.
 
+## VS Code
+
+Open the project folder in VS Code and select a Python 3.10+ interpreter. Create and activate a virtual environment, then install `requirements.txt` as shown above. The included workspace settings enable the Python extension's unittest discovery for `tests/test_*.py`; run MAYA from the integrated terminal with `python main.py`.
+
 For local AI, agent mode, document summaries, and screen/image analysis, install [Ollama](https://ollama.com/) and download models once:
 
 ```bash
