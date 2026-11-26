@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080c17">
+  <title>MAYA — Personal AI</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="MAYA home">
+        <span class="brand-mark">M</span>
+        <span><strong>MAYA</strong><small>PERSONAL INTELLIGENCE</small></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="navigation" aria-label="Main navigation">
+        <button class="nav-item active" data-view="assistant"><span class="nav-icon">◈</span> Assistant</button>
+        <button class="nav-item" data-view="devices"><span class="nav-icon">⌘</span> Smart home</button>
+        <button class="nav-item" data-view="files"><span class="nav-icon">▤</span> Files &amp; notes</button>
+        <button class="nav-item" data-view="memory"><span class="nav-icon">◷</span> Memory</button>
+        <button class="nav-item" data-view="skills"><span class="nav-icon">✳</span> Skills</button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="connection-card">
+        <span class="connection-dot" id="ai-dot"></span>
+        <div><strong id="ai-status">Checking local AI</strong><small id="ai-model">Ollama connection</small></div>
+      </div>
+      <div class="privacy-note"><span>◉</span> Private by design<br><small>Runs on this computer</small></div>
+      <div class="sidebar-footer">MAYA DESKTOP · V 1.0</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow" id="today-label">PERSONAL ASSISTANT</div>
+          <h1 id="page-title">Good evening.</h1>
+        </div>
+        <div class="topbar-actions">
+          <label class="language-select" for="language-select">
+            <span>VOICE</span>
+            <select id="language-select" aria-label="Voice recognition language">
+              <option value="en-IN">English</option>
+              <option value="hi-IN">Hindi / Hinglish</option>
+            </select>
+          </label>
+          <button class="icon-button" id="notification-button" title="Enable reminder notifications" aria-label="Enable reminder notifications">♧</button>
+          <div class="avatar">M</div>
+        </div>
+      </header>
+
+      <section class="view active" id="view-assistant">
+        <div class="dashboard-grid">
+          <section class="panel assistant-panel">
+            <div class="section-head">
+              <div><div class="eyebrow">YOUR ASSISTANT</div><h2>At your command.</h2></div>
+              <span class="live-pill"><i></i> READY</span>
+            </div>
+            <div class="orb-stage" id="orb-stage">
+              <div class="orb-ring ring-one"></div>
+              <div class="orb-ring ring-two"></div>
+              <div class="orb-core"><span class="orb-glyph">M</span></div>
+              <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+              <div class="orb-caption" id="orb-caption">SYSTEM ONLINE</div>
+              <div class="waveform" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+            <div class="voice-controls">
+              <button class="mic-button" id="mic-button" aria-label="Start voice listening"><span class="mic-icon">🎙</span><span id="mic-label">Start listening</span></button>
+              <p class="wake-hint">Say <strong>“Hey Jarvis”</strong> to wake · or type below</p>
+            </div>
+            <form class="command-form" id="command-form">
+              <button class="agent-toggle" id="agent-mode-button" type="button" aria-pressed="false" title="Let MAYA plan and use safe read-only tools">AGENT OFF</button>
+              <input id="command-input" type="text" autocomplete="off" placeholder="Ask MAYA anything…" aria-label="Ask MAYA">
+              <button type="submit" class="send-button" aria-label="Send message">↑</button>
+            </form>
+            <div class="privacy-footnote">Voice recognition uses your browser’s speech service. Audio is not stored by MAYA.</div>
+          </section>
+
+          <div class="right-column">
+            <section class="panel system-panel">
+              <div class="section-head compact">
+                <div><div class="eyebrow">LIVE TELEMETRY</div><h2>System health</h2></div>
+                <span class="refresh-indicator"><i></i> LIVE</span>
+              </div>
+              <div class="metric-row">
+                <div class="metric-icon cpu-icon">⌁</div>
+                <div class="metric-info"><span>PROCESSOR</span><strong id="cpu-value">—</strong></div>
+                <progress class="metric-track" id="cpu-bar" max="100" value="0" aria-label="CPU utilization"></progress>
+              </div>
+              <div class="metric-row">
+                <div class="metric-icon ram-icon">▥</div>
+                <div class="metric-info"><span>MEMORY</span><strong id="ram-value">—</strong></div>
+                <progress class="metric-track" id="ram-bar" max="100" value="0" aria-label="Memory utilization"></progress>
+              </div>
+              <div class="metric-row">
+                <div class="metric-icon disk-icon">◫</div>
+                <div class="metric-info"><span>DISK</span><strong id="disk-value">—</strong></div>
+                <progress class="metric-track" id="disk-bar" max="100" value="0" aria-label="Disk utilization"></progress>
+              </div>
+              <div class="system-footer"><span id="platform-label">Detecting system…</span><span id="gpu-label">GPU · unavailable</span></div>
+            </section>
+
+            <section class="panel reminders-panel">
+              <div class="section-head compact">
+                <div><div class="eyebrow">STAY ON TRACK</div><h2>Reminders</h2></div>
+                <button class="text-button" id="add-reminder-button">+ Add</button>
+              </div>
+              <form class="reminder-form hidden" id="reminder-form">
+                <input id="reminder-text" placeholder="What should I remind you?" maxlength="250" required>
+                <div class="reminder-form-row"><input id="reminder-minutes" type="number" min="1" max="525600" value="15" aria-label="Minutes until reminder"><button type="submit" class="small-primary">Set reminder</button></div>
+              </form>
+              <div class="reminders-list" id="reminders-list"><div class="empty-state">No reminders yet.</div></div>
+            </section>
+
+            <section class="panel quick-panel">
+              <div class="eyebrow">QUICK ACTIONS</div>
+              <div class="quick-actions">
+                <button data-command="What's my system status?"><span>⌁</span>System status</button>
+                <button data-command="Open browser"><span>↗</span>Open browser</button>
+                <button data-command="Search the web for today's news"><span>⌕</span>Search web</button>
+                <button data-command="Take a note: "><span>✎</span>Take a note</button>
+                <button id="analyze-screen-button"><span>▣</span>Analyze screen</button>
+              </div>
+            </section>
+          </div>
+        </div>
+        <section class="panel conversation-panel">
+          <div class="section-head compact"><div><div class="eyebrow">CONVERSATION</div><h2>Recent activity</h2></div><button class="text-button" id="clear-display-button">Clear view</button></div>
+          <div class="conversation-list" id="conversation-list"><div class="welcome-message"><span class="welcome-icon">✳</span><span>Welcome. I’m MAYA. Try a voice command or ask me something.</span></div></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-devices">
+        <div class="page-intro"><div class="eyebrow">CONNECTED DEVICES</div><h2>Your smart home, thoughtfully connected.</h2><p>Home Assistant actions are limited to devices you explicitly allow and always ask before changing a device.</p></div>
+        <section class="panel integration-panel">
+          <div class="section-head"><div><div class="eyebrow">HOME ASSISTANT</div><h2>Device controls</h2></div><span class="live-pill" id="home-pill">NOT CONNECTED</span></div>
+          <div class="integration-status" id="home-status">Checking integration…</div>
+          <div class="device-list" id="device-list"></div>
+          <div class="setup-callout"><strong>Connect Home Assistant</strong><p>Set <code>HOME_ASSISTANT_URL</code>, <code>HOME_ASSISTANT_TOKEN</code>, and comma-separated <code>HOME_ASSISTANT_ALLOWED_ENTITIES</code> environment variables before starting MAYA. Use a long-lived token and a trusted HTTPS URL.</p></div>
+        </section>
+        <section class="panel integration-panel email-panel">
+          <div class="section-head"><div><div class="eyebrow">EMAIL</div><h2>Draft, never auto-send.</h2></div><span class="live-pill">LOCAL HANDOFF</span></div>
+          <p>Ask MAYA to “draft an email to name@example.com about …”. Your default mail app opens a draft for you to review and send.</p>
+        </section>
+      </section>
+
+      <section class="view" id="view-files">
+        <div class="page-intro"><div class="eyebrow">YOUR WORKSPACE</div><h2>Files &amp; notes</h2><p>Browse supported files in Documents, Downloads, and Desktop. MAYA only reads a file when you choose it.</p></div>
+        <section class="panel files-panel">
+          <form id="file-search-form" class="file-search"><span>⌕</span><input id="file-search-input" placeholder="Filter files by name…" aria-label="Filter files"></form>
+          <div class="file-list" id="file-list"><div class="empty-state">Loading your files…</div></div>
+        </section>
+        <section class="panel notes-panel">
+          <div class="section-head compact"><div><div class="eyebrow">PRIVATE NOTES</div><h2>Quick capture</h2></div></div>
+          <form id="note-form" class="note-form"><textarea id="note-input" maxlength="4000" placeholder="Write a note to save on this computer…" required></textarea><button type="submit" class="small-primary">Save note</button></form>
+          <p class="muted-copy">Notes are stored locally in <code>~/.maya-assistant/notes</code>. MAYA does not delete files.</p>
+        </section>
+      </section>
+
+      <section class="view" id="view-memory">
+        <div class="page-intro"><div class="eyebrow">PERSONAL CONTEXT</div><h2>Memory that stays yours.</h2><p>Preferences and a short conversation history are stored in a local SQLite database on this computer.</p></div>
+        <section class="panel memory-panel">
+          <div class="section-head compact"><div><div class="eyebrow">PREFERENCES</div><h2>What MAYA remembers</h2></div></div>
+          <div id="preferences-list" class="preferences-list"><div class="empty-state">Nothing remembered yet. Say “remember that …” to add a preference.</div></div>
+        </section>
+        <section class="panel memory-panel">
+          <div class="section-head compact"><div><div class="eyebrow">CHAT HISTORY</div><h2>Recent conversations</h2></div></div>
+          <div id="memory-history" class="memory-history"><div class="empty-state">Your recent AI conversation will appear here.</div></div>
+        </section>
+        <div class="privacy-callout"><span>◉</span><div><strong>On-device storage</strong><p>Conversation text and preferences are kept in your local MAYA database. Messages sent to Ollama stay on this computer. Your browser’s voice recognition may use its provider’s service.</p></div></div>
+      </section>
+
+      <section class="view" id="view-skills">
+        <div class="page-intro"><div class="eyebrow">MAYA TOOLKIT</div><h2>Built-in skills for everyday work.</h2><p>Choose a skill to start. Local-AI skills use your configured Ollama model; web research requires internet access. PC and smart-home actions stay confirmation-gated.</p></div>
+        <section class="skills-overview">
+          <div class="skills-summary"><span class="summary-icon">✳</span><div><strong id="skill-count">14 skills</strong><small>Curated tools · no third-party skill code</small></div></div>
+          <span class="live-pill">LOCAL-FIRST</span>
+        </section>
+        <div class="skills-grid" id="skills-grid">
+          <div class="panel skill-card"><span class="skill-icon">⌕</span><div class="eyebrow">RESEARCH</div><h3>Web research</h3><p>Search live sources and review citations.</p><button class="skill-start" data-skill-start="research">Start research <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">⌘</span><div class="eyebrow">DEVELOPMENT</div><h3>Coding coach</h3><p>Explain code, debug errors, and learn programming.</p><button class="skill-start" data-skill-start="coding">Ask a coding question <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">⚒</span><div class="eyebrow">DEBUGGING</div><h3>Error &amp; bug fixer</h3><p>Find likely root causes, minimal fixes, and focused tests from your error details.</p><button class="skill-start" data-skill-start="debugging">Fix an error or bug <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">↻</span><div class="eyebrow">RECOVERY</div><h3>MAYA self-recovery</h3><p>Check MAYA, local memory, Ollama, and model status; get safe next steps.</p><button class="skill-start" data-skill-start="self_recovery">Run self-check <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">✎</span><div class="eyebrow">CREATION</div><h3>Writing studio</h3><p>Draft and polish clear writing in your language.</p><button class="skill-start" data-skill-start="writing">Start writing <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">▤</span><div class="eyebrow">DOCUMENTS</div><h3>Document summaries</h3><p>Read supported local documents and summarize them.</p><button class="skill-start" data-skill-start="summarize">Summarize a document <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">⇄</span><div class="eyebrow">LANGUAGE</div><h3>Translator</h3><p>Translate text while preserving tone and meaning.</p><button class="skill-start" data-skill-start="translate">Start translating <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">☷</span><div class="eyebrow">PRODUCTIVITY</div><h3>Task planner</h3><p>Turn goals into clear, prioritized next steps.</p><button class="skill-start" data-skill-start="planner">Plan a task <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">◎</span><div class="eyebrow">LEARNING</div><h3>Study coach</h3><p>Learn a concept with examples and practice questions.</p><button class="skill-start" data-skill-start="study">Start learning <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">✧</span><div class="eyebrow">IDEATION</div><h3>Idea partner</h3><p>Brainstorm useful options and compare trade-offs.</p><button class="skill-start" data-skill-start="brainstorm">Brainstorm ideas <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">◷</span><div class="eyebrow">PERSONAL</div><h3>Notes &amp; reminders</h3><p>Keep notes and timed reminders on this computer.</p><button class="skill-start" data-skill-start="productivity">Create a note <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">⌁</span><div class="eyebrow">MONITORING</div><h3>System health</h3><p>View live CPU, memory, disk, battery, and GPU data.</p><button class="skill-start" data-skill-start="system">Check system <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">⌂</span><div class="eyebrow">CONNECTED HOME</div><h3>Smart home</h3><p>Control explicitly allowed devices with confirmation.</p><button class="skill-start" data-skill-start="smart_home">View devices <span>→</span></button></div>
+          <div class="panel skill-card"><span class="skill-icon">▣</span><div class="eyebrow">VISION</div><h3>Screen understanding</h3><p>Analyze a screen you explicitly choose to share.</p><button class="skill-start" data-skill-start="vision">Analyze screen <span>→</span></button></div>
+        </div>
+      </section>
+
+      <footer class="main-footer"><span>MAYA · BUILT FOR YOUR DESK</span><span>LOCAL-FIRST · ALWAYS IN CONTROL</span></footer>
+    </main>
+  </div>
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+  <video id="screen-video" class="screen-video" autoplay muted></video>
+</body>
+</html>
